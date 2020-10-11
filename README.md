@@ -21,15 +21,14 @@ import (
 
 func main() {
 	shouldFlipVertical := true
-    path := "test/gopher.jpg"
-    desiredChannels := 0 // leave 0 for it to decide for you
+	path := "test/gopher.jpg"
+	desiredChannels := 0 // leave 0 for it to decide for you
 
 	data, width, height, nrChannels, cleanup, err := stbi.Load(path, shouldFlipVertical, desiredChannels)
 	if err != nil {
 		// Handle error
 	}
-    defer cleanup()
-
+	defer cleanup()
 	...
 }
 ```
