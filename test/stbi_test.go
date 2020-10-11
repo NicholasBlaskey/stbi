@@ -16,8 +16,10 @@ func loadFuncTest(
 		t.Error("Did not get an error upon file not existing")
 	}
 
+	// Load one that does exists
 	_, width, height, nrChannels,
 		cleanup, err := load("./gopher.jpg", false, 0)
+	defer cleanup()
 	if err != nil {
 		t.Errorf("Incorrectly got error with %s", err.Error())
 	}
@@ -29,7 +31,6 @@ func loadFuncTest(
 		t.Errorf("Got wrong number of channels expected 3 got %d",
 			nrChannels)
 	}
-	cleanup()
 }
 
 func TestLoad(t *testing.T) {
@@ -37,9 +38,9 @@ func TestLoad(t *testing.T) {
 }
 
 func TestLoadf(t *testing.T) {
-	loadFuncTest(stbi.Load, t)
+	loadFuncTest(stbi.Loadf, t)
 }
 
 func TestLoad16(t *testing.T) {
-	loadFuncTest(stbi.Load, t)
+	loadFuncTest(stbi.Load16, t)
 }

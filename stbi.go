@@ -10,6 +10,7 @@ import "C"
 
 import (
 	"errors"
+	//	"github.com/go-gl/gl/v4.1-core/gl"
 	"unsafe"
 )
 
@@ -57,15 +58,15 @@ func loadHelper(loadFunc int, path string, flipVertical bool, desiredChannels in
 	case LOAD:
 		p := C.stbi_load(cString, &width, &height, &nrChannels, wantedChannels)
 		failed = p == nil
-		data = unsafe.Pointer(data)
+		data = unsafe.Pointer(p)
 	case LOAD16:
 		p := C.stbi_load_16(cString, &width, &height, &nrChannels, wantedChannels)
 		failed = p == nil
-		data = unsafe.Pointer(data)
+		data = unsafe.Pointer(p)
 	case LOADF:
 		p := C.stbi_loadf(cString, &width, &height, &nrChannels, wantedChannels)
 		failed = p == nil
-		data = unsafe.Pointer(data)
+		data = unsafe.Pointer(p)
 	}
 	if failed {
 		failure := C.stbi_failure_reason()
@@ -73,11 +74,30 @@ func loadHelper(loadFunc int, path string, flipVertical bool, desiredChannels in
 	}
 
 	cleanup := func() {
-		C.stbi_image_free(unsafe.Pointer(data))
+		C.stbi_image_free(data)
 	}
-	return unsafe.Pointer(data), int32(width),
+	return data, int32(width),
 		int32(height), int32(nrChannels), cleanup, nil
+
 }
 
-// setUnpremultiplyOnLoad
-// convertIphonePngToRgb
+// for image formats that explicitly notate that they have premultiplied alpha,
+// we just return the colors as stored in the file. set this flag to force
+// unpremultiplication. results are undefined if the unpremultiply overflow.
+func setUnpremultiplyOnLoad(shouldSet bool) {
+	if shouldSet {
+		C.stbi_set_unpremultiply_on_load(1)
+	} else {
+		C.stbi_set_unpremultiply_on_load(0)
+	}
+}
+
+// indicate whether we should process iphone images back to canonical format,
+// or just pass them through "as-is"
+func convertIphonePngToRgb(shouldSet bool) {
+	if shouldSet {
+		C.stbi_convert_iphone_png_to_rgb(1)
+	} else {
+		C.stbi_convert_iphone_png_to_rgb(0)
+	}
+}
