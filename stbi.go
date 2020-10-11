@@ -1,3 +1,4 @@
+// A go wrapper of stb_image.h for loading files into OpenGL easier.
 package stbi
 
 /*
@@ -14,27 +15,27 @@ import (
 )
 
 const (
-	LOAD int = iota
-	LOAD16
-	LOADF
+	load int = iota
+	load16
+	loaff
 )
 
 func Load(path string, flipVertical bool, desiredChannels int) (
 	unsafe.Pointer, int32, int32, int32, func(), error) {
 
-	return loadHelper(LOAD, path, flipVertical, desiredChannels)
+	return loadHelper(load, path, flipVertical, desiredChannels)
 }
 
 func Load16(path string, flipVertical bool, desiredChannels int) (
 	unsafe.Pointer, int32, int32, int32, func(), error) {
 
-	return loadHelper(LOAD16, path, flipVertical, desiredChannels)
+	return loadHelper(load16, path, flipVertical, desiredChannels)
 }
 
 func Loadf(path string, flipVertical bool, desiredChannels int) (
 	unsafe.Pointer, int32, int32, int32, func(), error) {
 
-	return loadHelper(LOADF, path, flipVertical, desiredChannels)
+	return loadHelper(loadf, path, flipVertical, desiredChannels)
 }
 
 func loadHelper(loadFunc int, path string, flipVertical bool, desiredChannels int) (
@@ -54,15 +55,15 @@ func loadHelper(loadFunc int, path string, flipVertical bool, desiredChannels in
 	var data unsafe.Pointer
 	var failed bool
 	switch loadFunc {
-	case LOAD:
+	case load:
 		p := C.stbi_load(cString, &width, &height, &nrChannels, wantedChannels)
 		failed = p == nil
 		data = unsafe.Pointer(p)
-	case LOAD16:
+	case load16:
 		p := C.stbi_load_16(cString, &width, &height, &nrChannels, wantedChannels)
 		failed = p == nil
 		data = unsafe.Pointer(p)
-	case LOADF:
+	case loadf:
 		p := C.stbi_loadf(cString, &width, &height, &nrChannels, wantedChannels)
 		failed = p == nil
 		data = unsafe.Pointer(p)
