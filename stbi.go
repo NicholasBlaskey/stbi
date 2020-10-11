@@ -84,7 +84,7 @@ func loadHelper(loadFunc int, path string, flipVertical bool, desiredChannels in
 // for image formats that explicitly notate that they have premultiplied alpha,
 // we just return the colors as stored in the file. set this flag to force
 // unpremultiplication. results are undefined if the unpremultiply overflow.
-func setUnpremultiplyOnLoad(shouldSet bool) {
+func SetUnpremultiplyOnLoad(shouldSet bool) {
 	if shouldSet {
 		C.stbi_set_unpremultiply_on_load(1)
 	} else {
@@ -94,7 +94,7 @@ func setUnpremultiplyOnLoad(shouldSet bool) {
 
 // indicate whether we should process iphone images back to canonical format,
 // or just pass them through "as-is"
-func convertIphonePngToRgb(shouldSet bool) {
+func ConvertIphonePngToRgb(shouldSet bool) {
 	if shouldSet {
 		C.stbi_convert_iphone_png_to_rgb(1)
 	} else {
