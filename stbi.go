@@ -10,7 +10,6 @@ import "C"
 
 import (
 	"errors"
-	//	"github.com/go-gl/gl/v4.1-core/gl"
 	"unsafe"
 )
 
