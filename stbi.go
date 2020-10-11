@@ -17,7 +17,7 @@ import (
 const (
 	load int = iota
 	load16
-	loaff
+	loadf
 )
 
 func Load(path string, flipVertical bool, desiredChannels int) (
