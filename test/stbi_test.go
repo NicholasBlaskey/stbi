@@ -4,17 +4,20 @@ import (
 	"testing"
 
 	"github.com/nicholasblaskey/stbi"
+	"unsafe"
 )
 
-func TestLoad(t *testing.T) {
+func loadFuncTest(
+	load func(string, bool, int) (
+		unsafe.Pointer, int32, int32, int32, func(), error), t *testing.T) {
 	// Try to load an image that doesn't exist
-	_, _, _, _, _, err := stbi.Load("./dne.png", false, 0)
+	_, _, _, _, _, err := load("./dne.png", false, 0)
 	if err == nil {
 		t.Error("Did not get an error upon file not existing")
 	}
 
 	_, width, height, nrChannels,
-		cleanup, err := stbi.Load("./gopher.jpg", false, 0)
+		cleanup, err := load("./gopher.jpg", false, 0)
 	if err != nil {
 		t.Errorf("Incorrectly got error with %s", err.Error())
 	}
@@ -27,5 +30,16 @@ func TestLoad(t *testing.T) {
 			nrChannels)
 	}
 	cleanup()
+}
 
+func TestLoad(t *testing.T) {
+	loadFuncTest(stbi.Load, t)
+}
+
+func TestLoadf(t *testing.T) {
+	loadFuncTest(stbi.Load, t)
+}
+
+func TestLoad16(t *testing.T) {
+	loadFuncTest(stbi.Load, t)
 }
